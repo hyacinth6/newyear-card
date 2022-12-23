@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul{
+            list-style: none;
+        }
+        img{
+            display: block;
+        }
+        #page1{
+            width: 100vw;
+            height: 100vh;
+            background: url(./img/page1_bg.png) center;
+            background-size: cover;
+        }
+        #page1 .page1-lantern{
+            width: 70px;
+            height: 93px;
+            background: url(./img/page1_lantern.png) center;
+            background-size: cover;
+            margin: 0 auto;
+        }
+        #page1 .page1-frame{
+            width: 200px;
+            height: 62px;
+            background: url(./img/page1_frame.png);
+            background-size: cover;
+            margin: 10px auto;
+            line-height: 62px;
+            text-align: center;
+            color: #fff;
+            font-weight:bold ;
+            font-size: 18px;
+        }
+        #page1 .page1-text{
+            width: 100px;
+            height: 301px;
+            background: url(./img/page1_text.png);
+            background-size: cover;
+            margin: 0 auto;
+        }
+        #page1 .page1-fence{
+            position: absolute;
+            bottom: 0;
+            width: 100vw;
+            height: 150px;
+            background: url(./img/page1_fence.png) center bottom;
+           background-size:100%;
+        }
+        #page1 .page1-p1{
+            position: absolute;
+            left: 50%;
+            top: -40px;
+            margin-left: -55px;
+            width: 82px;
+            height: 150px;
+            background: url(./img/page1_p1.png);
+            background-size: cover;
+            /* 旋转基点 左右center 以bottom为准 */
+            transform-origin: center bottom;
+            /* 2秒 匀速（linear） 无限次（infinite） ease-in-out(缓入缓出)动画效果 */
+            animation: 2s ease-in-out infinite prun -1s;
+        }
+        #page1 .page1-p2{
+            position: absolute;
+            left: 5%;
+            top: -60px;
+            width: 135px;
+            height: 174px;
+            background: url(./img/page1_p2.png);
+            background-size: cover;
+            transform-origin: center bottom;
+            animation: 2s ease-in-out infinite prun -1.5s;
+        }
+        #page1 .page1-p3{
+            position: absolute;
+            right: 2%;
+            top: -40px;
+            width: 145px;
+            height: 145px;
+            background: url(./img/page1_p3.png);
+            background-size: cover;
+            transform-origin: center bottom;
+            animation: 2s ease-in-out infinite prun;
+        }
+        /* 关键帧 @keyframes at-rule 规则通过在动画序列中定义关键帧（或 waypoints）的样式来控制 CSS 动画序列中的中间步骤。和 转换 transition 相比，关键帧 keyframes 可以控制动画序列的中间步骤。 */
+        @keyframes prun{
+            /* 0% 的时候选着进行简单的旋转 transform: rotate(2deg); 负的两个度数 摆动是以底部作为中心点进行摆动*/
+            0%{transform: rotate(-2deg);}
+            50%{transform: rotate(2deg);}
+            100%{transform: rotate(-2deg);}
+        }
+        #music{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            background: url(./img/music_icon.png);
+            background-size: cover;
+        }
+        /* 让音乐小图标旋转起来 */
+        #music.run{
+            animation: 2s linear infinite mrun;
+        }
+        @keyframes mrun{
+            0%{transform: rotate(0deg);}
+           100%{transform: rotate(360deg);}
+        }
+        #page2{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 场景一 -->
+    <div id="page1">
+        <div class="page1-lantern"></div>
+        <div class="page1-frame">12.31 23:59:5<span>5</span></div>
+        <div class="page1-text"></div>
+        <div class="page1-fence">
+            <div class="page1-p1"></div>
+            <div class="page1-p2"></div>
+            <div class="page1-p3"></div>
+        </div>
+    </div>
+    <!-- 场景二 -->
+    <div id="page2">
+
+    </div>
+    <div id="music" class="run">
+        <audio src="./mp3/music_bg.mp3" loop></audio>
+    </div>
+
+    <script>
+        musicBg()
+        countDown()
+        // 设置音乐的播放与暂停以及旋转
+        function musicBg(){
+            let music=document.querySelector('#music')
+            let musicAudio=music.querySelector('audio')
+            // 设置声音的大小 volume为0表示静音，为1 表示最大声音
+            musicAudio.volume=0.2
+            music.addEventListener('click',function(){
+                // 如果musicAudio是暂停状态
+                if(musicAudio.paused){
+                    this.className='run'
+                    musicAudio.play();
+                }else{
+                    // 如果是播放状态
+                    this.className=''
+                    musicAudio.pause();
+                }
+            });
+        }
+
+        // 设置倒计时
+        function countDown(){
+            let countNumber=document.querySelector('.page1-frame span')
+            let page1=document.querySelector('#page1')
+            let page2=document.querySelector('#page2')
+            // 添加定时器
+          let timer=setInterval(()=>{
+            // 当定时器结束时清除定时器
+            if(countNumber.innerHTML==9){
+                // 当countNumber到9时，清除定时器
+                clearInterval(timer)
+                page1.style.display='none'
+                page2.style.display='block'
+            }else{
+                countNumber.innerHTML=++countNumber.innerHTML
+            }
+            },1000)
+        }
+    </script>
+</body>
+</html>
